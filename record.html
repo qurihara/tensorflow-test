@@ -51,7 +51,7 @@ function devicemotionHandler(event) {
 $(function(){
   $('#bs').bind('touchstart',function () {
     started = true;
-     window.addEventListener("devicemotion", deviceomotionHandler);//, true);
+     window.addEventListener("devicemotion", devicemotionHandler);//, true);
     //window.addEventListener("deviceorientation", deviceorientationHandler);
     setTimeout(stop,30000);
   });
