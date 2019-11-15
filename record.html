@@ -10,8 +10,9 @@
 <body style="-webkit-touch-callout:none;-webkit-user-select:none;">
 
 <h3>Tensorflow.js test</h3>
-<button id="bs" style="width:150px;height:150px">start</button>
-<div id="ori"></div>
+<button id="bs" style="width:150px;height:150px">start</button><br>
+<div id="ori"></div><br>
+<textarea id="txt" rows="40" cols="40"></textarea><br>
 <script>
 var started = false;
 // var fps = 10;
@@ -24,13 +25,15 @@ var started = false;
 // }
 // setInterval(manager, 1000/fps);
 
+var data = "";
 function deviceorientationHandler(event) {
   if (started === false) return;
   let beta = event.beta;// X  -90 up +90 down
   let gamma = event.gamma;// Y -90 left +90 right
   let alpha = event.alpha;// Z
   $('#ori').text("beta: " + beta + ", gamma: " + gamma + ", alpha: " + alpha);
-  console.log(beta + "," + gamma + "," + alpha);
+  //console.log(beta + "," + gamma + "," + alpha);
+  data += beta + "," + gamma + "," + alph + "\n"
 }
 
 $(function(){
@@ -44,6 +47,7 @@ $(function(){
 
 var stop = function(){
   started =false;
+  $('#txt').val(data);
 }
 
 </script>
