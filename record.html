@@ -17,15 +17,15 @@
 <script>
 eruda.init();
 var started = false;
-// var fps = 10;
-// var data = [];
-// var manager = function(){
-//   if (data.length !== 0){
-// //    send(data);
-//     data = [];
-//   }
-// }
-// setInterval(manager, 1000/fps);
+var fps = 10;
+var dat = "";
+var manager = function(){
+  if (dat !== ""){
+    data += dat;
+    dat = "";
+  }
+}
+setInterval(manager, 1000/fps);
 
 var data = "";
 function deviceorientationHandler(event) {
@@ -35,7 +35,8 @@ function deviceorientationHandler(event) {
   let alpha = event.alpha;// Z
   $('#ori').text("beta: " + beta + ", gamma: " + gamma + ", alpha: " + alpha);
   //console.log(beta + "," + gamma + "," + alpha);
-  data += beta + "," + gamma + "," + alpha + "\n";
+  dat = beta + "," + gamma + "," + alpha + "\n";
+  // data += beta + "," + gamma + "," + alpha + "\n";
 }
 
 function devicemotionHandler(event) {
@@ -45,7 +46,8 @@ function devicemotionHandler(event) {
   let z = event.acceleration.z;
   let intv = event.interval;
   $('#ori').text("x: " + x + ", y: " + y + ", z: " + z + ", int: " + intv);
-  data += x + "," + y + "," + z + "\n";
+  dat = x + "," + y + "," + z + "\n";
+  // data += x + "," + y + "," + z + "\n";
 }
 
 $(function(){
