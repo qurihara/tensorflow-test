@@ -1,0 +1,51 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ua-parser-js@0/dist/ua-parser.min.js"></script>
+  <script src="https://dz.plala.jp/svr/iOSdeviceorientationCheck.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://dz.plala.jp/svr/iOSdeviceorientationCheck.css">
+</head>
+<body style="-webkit-touch-callout:none;-webkit-user-select:none;">
+
+<h3>Tensorflow.js test</h3>
+<button id="bs" style="width:150px;height:150px">start</button>
+<div id="ori"></div>
+<script>
+var started = false;
+// var fps = 10;
+// var data = [];
+// var manager = function(){
+//   if (data.length !== 0){
+// //    send(data);
+//     data = [];
+//   }
+// }
+// setInterval(manager, 1000/fps);
+
+function deviceorientationHandler(event) {
+  if (started === false) return;
+  let beta = event.beta;// X  -90 up +90 down
+  let gamma = event.gamma;// Y -90 left +90 right
+  let alpha = event.alpha;// Z
+  $('#ori').text("beta: " + beta + ", gamma: " + gamma + ", alpha: " + alpha);
+  console.log(beta + "," + gamma + "," + alpha);
+}
+
+$(function(){
+  $('#bs').bind('touchstart',function () {
+    started = true;
+//    window.addEventListener("devicemotion", deviceomotionHandler);//, true);
+    window.addEventListener("deviceorientation", deviceorientationHandler);
+    setTimeout(stop,30000);
+  });
+});
+
+var stop = function(){
+  started =false;
+}
+
+</script>
+</body>
+</html>
