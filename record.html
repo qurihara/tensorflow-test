@@ -35,7 +35,7 @@ function deviceorientationHandler(event) {
   let alpha = event.alpha;// Z
   $('#ori').text("beta: " + beta + ", gamma: " + gamma + ", alpha: " + alpha);
   //console.log(beta + "," + gamma + "," + alpha);
-  data += beta + "," + gamma + "," + alph + "\n"
+  data += beta + "," + gamma + "," + alpha + "\n";
 }
 
 function devicemotionHandler(event) {
@@ -45,14 +45,14 @@ function devicemotionHandler(event) {
   let z = event.acceleration.z;
   let intv = event.acceleration.interval;
   $('#ori').text("x: " + x + ", y: " + y + ", z: " + z + ", int: " + intv);
-  data += x + "," + y + "," + z + "\n"
+  data += x + "," + y + "," + z + "\n";
 }
 
 $(function(){
   $('#bs').bind('touchstart',function () {
     started = true;
-    // window.addEventListener("devicemotion", deviceomotionHandler);//, true);
-    window.addEventListener("deviceorientation", deviceorientationHandler);
+     window.addEventListener("devicemotion", deviceomotionHandler);//, true);
+    //window.addEventListener("deviceorientation", deviceorientationHandler);
     setTimeout(stop,30000);
   });
 });
