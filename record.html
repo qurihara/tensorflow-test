@@ -36,11 +36,21 @@ function deviceorientationHandler(event) {
   data += beta + "," + gamma + "," + alph + "\n"
 }
 
+function devicemotionHandler(event) {
+  if (started === false) return;
+  let x = event.acceleration.x;
+  let y = event.acceleration.y;
+  let z = event.acceleration.z;
+  let intv = event.acceleration.interval;
+  $('#ori').text("x: " + x + ", y: " + y + ", z: " + z + ", int: " + intv);
+  data += x + "," + y + "," + z + "\n"
+}
+
 $(function(){
   $('#bs').bind('touchstart',function () {
     started = true;
-//    window.addEventListener("devicemotion", deviceomotionHandler);//, true);
-    window.addEventListener("deviceorientation", deviceorientationHandler);
+    window.addEventListener("devicemotion", deviceomotionHandler);//, true);
+//    window.addEventListener("deviceorientation", deviceorientationHandler);
     setTimeout(stop,30000);
   });
 });
