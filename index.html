@@ -32,8 +32,9 @@ var manager = function(){
     console.log(data_a.length);
     while (data_a.length >30) data_a.slice(3);
     if (data_a.length === 30) {
-      getframe();
       stop();
+      alert("prediction start");
+      getframe();
     }
     dat = "";
     dat_a = [];
