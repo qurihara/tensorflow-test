@@ -29,11 +29,8 @@ var manager = function(){
   if (dat !== ""){
     // data += dat;
     data_a.push(dat_a);
-    if (data_a.length ===33){
-      data_a.slice(3);
-      if (data_a.length !== 30) alert("data error.");
-      getFrame();
-    }
+    while (data_a.length >30) data_a.slice(3);
+    if (data_a.length === 30) getframe();
     dat = "";
     dat_a = [];
   }
@@ -163,6 +160,7 @@ function getFrame() {
   //get the prediction
   const pred = model.predict(preprocess(data_a)).dataSync()
   $('#prediction').text(classNames[pred]);
+  console.log(pred);
 
   //find the top 4 predictions
   const indices = findIndicesOfMax(pred, 4)
@@ -171,6 +169,8 @@ function getFrame() {
 
   //set the table
   // setTable(names, probs)
+
+  stop();
 }
 
 /*
