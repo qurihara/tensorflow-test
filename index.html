@@ -29,8 +29,12 @@ var manager = function(){
   if (dat !== ""){
     // data += dat;
     data_a.push(dat_a);
+    console.log(data_a.length);
     while (data_a.length >30) data_a.slice(3);
-    if (data_a.length === 30) getframe();
+    if (data_a.length === 30) {
+      getframe();
+      stop();
+    }
     dat = "";
     dat_a = [];
   }
@@ -170,7 +174,6 @@ function getFrame() {
   //set the table
   // setTable(names, probs)
 
-  stop();
 }
 
 /*
