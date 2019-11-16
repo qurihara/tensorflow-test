@@ -28,14 +28,14 @@ var data_a = [];
 var manager = function(){
   if (dat !== ""){
     // data += dat;
-    data_a.push(dat_a);
+    data_a = data_a.concat(dat_a);
     console.log(data_a.length);
     while (data_a.length >30) data_a.slice(3);
     if (data_a.length === 30) {
       stop();
       console.log(data_a);
       alert("prediction start");
-      getframe();
+      getFrame();
     }
     dat = "";
     dat_a = [];
