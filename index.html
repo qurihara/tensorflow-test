@@ -25,15 +25,12 @@ var fps = 10;
 var dat = "";
 var dat_a = [];
 var data_a = [];
-data_a.push(3);
-var ddd = new Array();
-ddd.push(4);
 var manager = function(){
   if (dat !== ""){
     // data += dat;
-    data_a = data_a.push(dat_a);
+    data_a.push(dat_a);
     if (data_a.length ===33){
-      data_a = data_a.slice(3);
+      data_a.slice(3);
       if (data_a.length !== 30) alert("data error.");
       getFrame();
     }
