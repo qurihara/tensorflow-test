@@ -33,6 +33,7 @@ var manager = function(){
     while (data_a.length >30) data_a.slice(3);
     if (data_a.length === 30) {
       stop();
+      console.log(data_a);
       alert("prediction start");
       getframe();
     }
@@ -107,8 +108,11 @@ function preprocess(d) {
         // const normalized = tf.scalar(1.0).sub(resized.div(offset));
 
         //We add a dimension to get a batch shape
-        const batched = normalized.expandDims(0)
-        return batched
+        const batched = normalized.expandDims(0);
+
+        console.log(batched);
+
+        return batched;
     })
 }
 
