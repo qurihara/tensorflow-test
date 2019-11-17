@@ -14,7 +14,6 @@
 
 </head>
 <body style="-webkit-touch-callout:none;-webkit-user-select:none;">
-
 <h3>Tensorflow.js test</h3>
 <div id="prediction"></div><br>
 <button id="bs" style="width:150px;height:150px">start</button><br>
@@ -53,9 +52,9 @@ var recogManager = function(){
   if (started === true && recog === true){
       getFrame();
   }
-  setTimeout(recogManager, 500);
+  setTimeout(recogManager, 100);
 }
-setTimeout(recogManager, 500);
+setTimeout(recogManager, 100);
 
 var data = "";
 function deviceorientationHandler(event) {
@@ -192,8 +191,8 @@ function findTopValues(inp, count) {
 get the prediction
 */
 function getFrame() {
-  //get the image data from the canvas
-  // const imgData = getImageData()
+
+//   let st = Date.now();
 
   //get the prediction
   const pred = model.predict(preprocess(data_a)).dataSync()
@@ -203,18 +202,14 @@ function getFrame() {
   const probs = findTopValues(pred, 1)
   const names = getClassNames(indices)
 
-  //set the table
-  // setTable(names, probs)
-
   $('#prediction').text(classNames[indices[0]]);
-  // console.log(pred);
-  // console.log(indices);
-  // console.log(probs);
-  // console.log(names);
+//   console.log(pred);
+//   console.log(indices);
+//   console.log(probs);
+//   console.log(names);
 
-
-
-
+//   const et = Date.now() - st; // in milli sec https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Date/now
+//   console.log(et + "ms for prediction");
 }
 
 /*
