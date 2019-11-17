@@ -49,7 +49,7 @@ function devicemotionHandler(event) {
   let z_ = event.acceleration.z;
   let pow = Math.sqrt(x_*x_ + y_*y_ + z_*z_)
   let intv = event.interval;
-  $('#ori').text("x: " + x + ", y: " + y + ", z: " + z + ", pow: " + z + ", int: " + intv);
+  $('#ori').text("x: " + x + ", y: " + y + ", z: " + z + ", pow: " + pow + ", int: " + intv);
   dat = x + "," + y + "," + z + "," + pow + "\n";
   // data += x + "," + y + "," + z + "\n";
 }
