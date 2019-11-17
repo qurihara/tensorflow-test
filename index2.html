@@ -119,7 +119,7 @@ function preprocess(d) {
         let tensor = tf.tensor(d,[10,3]);
 //         console.log(tensor);
         //x = (x/(10.0) + 1.0)/2
-        const normalized = tensor.divide(tf.scalar(20.0)).add(tf.scalar(0.5));
+        const normalized = tensor.div(tf.scalar(20.0)).add(tf.scalar(0.5));
 //         console.log(normalized);
 
         // //convert to a tensor
