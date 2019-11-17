@@ -4,6 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/starter-sample.css">
+  <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
   <script src="https://unpkg.com/obniz@2.4.0/obniz.js" crossorigin="anonymous"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"> </script>
@@ -15,6 +16,8 @@
 </head>
 <body style="-webkit-touch-callout:none;-webkit-user-select:none;">
 
+<div id="obniz-debug"></div>
+
 <h3>Tensorflow.js test</h3>
 <div id="prediction"></div><br>
 <button id="bs" style="width:150px;height:150px">start</button><br>
@@ -24,6 +27,12 @@
 <div id="ori"></div><br>
 <script>
 eruda.init();
+
+var obniz = new Obniz("OBNIZ_ID_HERE");
+obniz.onconnect = async function () {
+    obniz.display.clear();
+    obniz.display.print("Hello World");
+};
 
 var started = false;
 var recog = false;
@@ -213,6 +222,8 @@ function getFrame() {
   // console.log(names);
 
 
+  obniz.display.clear();
+  obniz.display.print(classNames[indices[0]]);
 
 
 }
