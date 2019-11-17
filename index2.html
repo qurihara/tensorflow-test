@@ -1,0 +1,252 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<!--  <link rel="stylesheet" href="/css/starter-sample.css"> -->
+  <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"> </script>
+  <script src="https://cdn.jsdelivr.net/npm/ua-parser-js@0/dist/ua-parser.min.js"></script>
+  <script src="https://dz.plala.jp/svr/iOSdeviceorientationCheck.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://dz.plala.jp/svr/iOSdeviceorientationCheck.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/1.4.3/eruda.min.js"></script>
+
+</head>
+<body style="-webkit-touch-callout:none;-webkit-user-select:none;">
+<h3>Tensorflow.js test</h3>
+<div id="prediction"></div><br>
+<button id="bs" style="width:150px;height:150px">start</button><br>
+<button id="be" style="width:150px;height:150px">stop</button><br>
+<!-- <button id="bp" style="width:150px;height:150px">predict</button><br> -->
+<div id="prediction"></div><br>
+<div id="ori"></div><br>
+<script>
+eruda.init();
+
+var started = false;
+var recog = false;
+var fps = 10;
+var dat = "";
+var dat_a = [];
+var data_a = [];
+var manager = function(){
+  if (dat !== ""){
+    // data += dat;
+    data_a = data_a.concat(dat_a);
+//      console.log(data_a.length);
+    if (data_a.length >40) data_a = data_a.slice(4);
+    if (data_a.length === 40) {
+      //stop();
+      //console.log(data_a);
+      //getFrame();
+      recog = true;
+    }
+    dat = "";
+    dat_a = [];
+  }
+}
+setInterval(manager, 1000/fps);
+
+var recogManager = function(){
+  if (started === true && recog === true){
+      getFrame();
+  }
+  setTimeout(recogManager, 100);
+}
+setTimeout(recogManager, 100);
+
+var data = "";
+function deviceorientationHandler(event) {
+  if (started === false) return;
+  let beta = event.beta;// X  -90 up +90 down
+  let gamma = event.gamma;// Y -90 left +90 right
+  let alpha = event.alpha;// Z
+  $('#ori').text("beta: " + beta + ", gamma: " + gamma + ", alpha: " + alpha);
+  //console.log(beta + "," + gamma + "," + alpha);
+  dat = beta + "," + gamma + "," + alpha + "\n";
+  // data += beta + "," + gamma + "," + alpha + "\n";
+  dat_a = [beta,gamma,aplha];
+}
+
+function devicemotionHandler(event) {
+  if (started === false) return;
+  let x = event.accelerationIncludingGravity.x;
+  let y = event.accelerationIncludingGravity.y;
+  let z = event.accelerationIncludingGravity.z;
+  let x_ = event.acceleration.x;
+  let y_ = event.acceleration.y;
+  let z_ = event.acceleration.z;
+  let pow = Math.sqrt(x_*x_ + y_*y_ + z_*z_)
+  let intv = event.interval;
+  $('#ori').text("x: " + x + ", y: " + y + ", z: " + z + ", pow: " + z + ", int: " + intv);
+  dat = x + "," + y + "," + z + "," + pow + "\n";
+  // data += x + "," + y + "," + z + "\n";
+  dat_a = [x,y,z,pow];
+}
+
+$(function(){
+  $('#bs').click(function () {
+    started = true;
+     window.addEventListener("devicemotion", devicemotionHandler);//, true);
+    //window.addEventListener("deviceorientation", deviceorientationHandler);
+    // setTimeout(stop,30000);
+  });
+  $('#be').click(function () {
+    stop();
+  });
+  $('#bp').click(function () {
+    getFrame();
+  });
+
+  start();
+});
+
+var stop = function(){
+  started =false;
+}
+
+///////////////
+
+var model;
+var classNames = [];
+
+/*
+preprocess the data
+*/
+function preprocess(d) {
+    return tf.tidy(() => {
+        let tensor = tf.tensor(d,[10,4]);
+//         console.log(tensor);
+        const normalized = tensor.divide(tf.scalar(9.8)).sub(tf.scalar(1.0));
+//         console.log(normalized);
+
+        // //convert to a tensor
+        // let tensor = tf.browser.fromPixels(imgData, numChannels = 1)
+        // //resize
+        // const resized = tf.image.resizeBilinear(tensor, [28, 28]).toFloat()
+        // //normalize
+        // const offset = tf.scalar(255.0);
+        // const normalized = tf.scalar(1.0).sub(resized.div(offset));
+
+        //We add a dimension to get a batch shape
+        const batched = normalized.expandDims(0).expandDims(-1);
+//         console.log(batched);
+
+        return batched;
+    })
+}
+
+/*
+load the model
+*/
+async function start() {
+    //load the model
+    model = await tf.loadLayersModel('https://qurihara.github.io/tensorflow-test/model/model.json')
+
+    //warm up
+//    model.predict(tf.zeros([1, 28, 28, 1]))
+      const pred = model.predict(preprocess(
+        [-0.011432640807493588, 0.03095470837522298, 0.13557283805012701,
+         -0.004682225832366384, 0.03533219280708581, 0.13123802371621132,
+         -0.008368531395983881, 0.03447053447645158, 0.13604630078077315,
+         -0.00701378318562638, 0.036240868617221714, 0.13965572344958782,
+         -0.01630287719236221, 0.03383658395446837, 0.12365443671941756,
+         -0.007202853184053674, 0.02419646628666669, 0.13548691333234308,
+         -0.01287978457561694, 0.034183753424324094, 0.14102759632468223,
+         -0.0075550824215169995, 0.030178682501427828, 0.13429156606793402,
+         0.0012078231534920633, 0.026752178651466965, 0.13729308597147463,
+         -0.00569194629760459, 0.02913812393993139, 0.1432476104617119])).dataSync();
+      //console.log(pred);
+    //load the class names
+    await loadDict()
+}
+
+/*
+get indices of the top probs
+*/
+function findIndicesOfMax(inp, count) {
+    var outp = [];
+    for (var i = 0; i < inp.length; i++) {
+        outp.push(i); // add index to output array
+        if (outp.length > count) {
+            outp.sort(function(a, b) {
+                return inp[b] - inp[a];
+            }); // descending sort the output array
+            outp.pop(); // remove the last index (index of smallest element in output array)
+        }
+    }
+    return outp;
+}
+
+/*
+find the top N predictions
+*/
+function findTopValues(inp, count) {
+    var outp = [];
+    let indices = findIndicesOfMax(inp, count)
+    // show 5 greatest scores
+    for (var i = 0; i < indices.length; i++)
+        outp[i] = inp[indices[i]]
+    return outp
+}
+
+/*
+get the prediction
+*/
+function getFrame() {
+
+//   let st = Date.now();
+
+  //get the prediction
+  const pred = model.predict(preprocess(data_a)).dataSync()
+
+  //find the top 4 predictions
+  const indices = findIndicesOfMax(pred, 1)
+  const probs = findTopValues(pred, 1)
+  const names = getClassNames(indices)
+
+  $('#prediction').text(classNames[indices[0]]);
+//   console.log(pred);
+//   console.log(indices);
+//   console.log(probs);
+//   console.log(names);
+
+//   const et = Date.now() - st; // in milli sec https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Date/now
+//   console.log(et + "ms for prediction");
+}
+
+/*
+get the the class names
+*/
+function getClassNames(indices) {
+    var outp = []
+    for (var i = 0; i < indices.length; i++)
+        outp[i] = classNames[indices[i]]
+    return outp
+}
+
+/*
+load the class names
+*/
+async function loadDict() {
+    loc = 'https://qurihara.github.io/tensorflow-test/model/class_names.txt'
+    await $.ajax({
+        url: loc,
+        dataType: 'text',
+    }).done(success);
+}
+/*
+load the class names
+*/
+function success(data) {
+    const lst = data.split(/\n/)
+    for (var i = 0; i < lst.length - 1; i++) {
+        let symbol = lst[i]
+        classNames[i] = symbol
+    }
+}
+
+</script>
+</body>
+</html>
