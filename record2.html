@@ -1,0 +1,73 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ua-parser-js@0/dist/ua-parser.min.js"></script>
+  <script src="https://dz.plala.jp/svr/iOSdeviceorientationCheck.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://dz.plala.jp/svr/iOSdeviceorientationCheck.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/1.4.3/eruda.min.js"></script>
+</head>
+<body style="-webkit-touch-callout:none;-webkit-user-select:none;">
+
+<h3>Tensorflow.js test</h3>
+<button id="bs" style="width:150px;height:150px">start</button><br>
+<textarea id="txt" rows="5" cols="40"></textarea><br>
+<div id="ori"></div><br>
+<script>
+eruda.init();
+var started = false;
+var fps = 10;
+var dat = "";
+var manager = function(){
+  if (dat !== ""){
+    data += dat;
+    dat = "";
+  }
+}
+setInterval(manager, 1000/fps);
+
+var data = "";
+function deviceorientationHandler(event) {
+  if (started === false) return;
+  let beta = event.beta;// X  -90 up +90 down
+  let gamma = event.gamma;// Y -90 left +90 right
+  let alpha = event.alpha;// Z
+  $('#ori').text("beta: " + beta + ", gamma: " + gamma + ", alpha: " + alpha);
+  //console.log(beta + "," + gamma + "," + alpha);
+  dat = beta + "," + gamma + "," + alpha + "\n";
+  // data += beta + "," + gamma + "," + alpha + "\n";
+}
+
+function devicemotionHandler(event) {
+  if (started === false) return;
+  let x = event.accelerationIncludingGravity.x;
+  let y = event.accelerationIncludingGravity.y;
+  let z = event.accelerationIncludingGravity.z;
+  let x_ = event.acceleration.x;
+  let y_ = event.acceleration.y;
+  let z_ = event.acceleration.z;
+  let pow = Math.sqrt(x_*x_ + y_*y_ + z_*z_)
+  let intv = event.interval;
+  $('#ori').text("x: " + x + ", y: " + y + ", z: " + z + ", pow: " + z + ", int: " + intv);
+  dat = x + "," + y + "," + z + "," + pow + "\n";
+  // data += x + "," + y + "," + z + "\n";
+}
+
+$(function(){
+  $('#bs').bind('touchstart',function () {
+    started = true;
+     window.addEventListener("devicemotion", devicemotionHandler);//, true);
+    //window.addEventListener("deviceorientation", deviceorientationHandler);
+    setTimeout(stop,30000);
+  });
+});
+
+var stop = function(){
+  started =false;
+  $('#txt').append(data);
+}
+
+</script>
+</body>
+</html>
