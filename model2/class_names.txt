@@ -1,0 +1,7 @@
+hold_landscape_left
+hold_portlait_up
+random_move
+leave_face_up
+hold_portlait_down
+leave_face_down
+hold_landscape_right
